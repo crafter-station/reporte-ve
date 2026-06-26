@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Crosshair, MapPin } from "lucide-react";
+import { Check, Crosshair, MapPin, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -18,13 +18,17 @@ import {
   CATEGORIES,
   CATEGORY_LABELS,
   CATEGORY_META,
+  categoryMeta,
   ESTADO_NAMES,
 } from "@/lib/taxonomy";
 import { cn } from "@/lib/utils";
 
 export default function ReportarPage() {
   const [text, setText] = useState("");
-  const [category, setCategory] = useState<string>("");
+  // A report can span several services at once. `categories` holds canonical
+  // taxonomy keys plus any free-text labels the reporter adds for "otro".
+  const [categories, setCategories] = useState<string[]>([]);
+  const [customCat, setCustomCat] = useState("");
   const [estado, setEstado] = useState<string>("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
     null,
@@ -46,6 +50,26 @@ export default function ReportarPage() {
     );
   }
 
+  function toggleCategory(c: string) {
+    setCategories((prev) =>
+      prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c],
+    );
+  }
+
+  function addCustom() {
+    const label = customCat.trim();
+    if (!label) return;
+    if (label.length > 40) {
+      toast.error("Esa categoría es muy larga.");
+      return;
+    }
+    const exists = categories.some(
+      (c) => c.toLowerCase() === label.toLowerCase(),
+    );
+    if (!exists) setCategories((prev) => [...prev, label]);
+    setCustomCat("");
+  }
+
   async function submit() {
     if (text.trim().length < 3) {
       toast.error("Cuéntanos qué está pasando.");
@@ -58,7 +82,7 @@ export default function ReportarPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           text,
-          category: category || undefined,
+          categories: categories.length ? categories : undefined,
           estado: estado || undefined,
           lat: coords?.lat,
           lng: coords?.lng,
@@ -126,7 +150,8 @@ export default function ReportarPage() {
                 onClick={() => {
                   setTicket(null);
                   setText("");
-                  setCategory("");
+                  setCategories([]);
+                  setCustomCat("");
                   setEstado("");
                   setCoords(null);
                 }}
@@ -176,17 +201,22 @@ export default function ReportarPage() {
             </div>
 
             <div className="space-y-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                Categoría
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                  Categorías
+                </span>
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  Puedes elegir varias
+                </span>
+              </div>
               <div className="grid grid-cols-2 gap-px border border-border bg-border">
                 {CATEGORIES.map((c) => {
-                  const on = category === c;
+                  const on = categories.includes(c);
                   return (
                     <button
                       key={c}
                       type="button"
-                      onClick={() => setCategory(on ? "" : c)}
+                      onClick={() => toggleCategory(c)}
                       className={cn(
                         "flex items-center gap-2 px-3 py-2.5 text-left text-[13px] transition-colors",
                         on
@@ -207,6 +237,62 @@ export default function ReportarPage() {
                   );
                 })}
               </div>
+
+              {/* Custom / not-yet-listed categories — recategorized later. */}
+              <div className="flex items-center gap-px border border-border bg-border">
+                <input
+                  value={customCat}
+                  onChange={(e) => setCustomCat(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addCustom();
+                    }
+                  }}
+                  placeholder="¿Otra? Escríbela y añádela"
+                  maxLength={40}
+                  className="h-9 flex-1 bg-card px-3 text-[13px] outline-none placeholder:text-muted-foreground"
+                />
+                <button
+                  type="button"
+                  onClick={addCustom}
+                  className="flex h-9 items-center gap-1 bg-card px-3 text-[12px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <Plus className="size-3.5" />
+                  Añadir
+                </button>
+              </div>
+
+              {/* Selected chips — shows the full picked set, custom included. */}
+              {categories.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  {categories.map((c) => {
+                    const meta = categoryMeta(c);
+                    const label =
+                      CATEGORY_LABELS[c as keyof typeof CATEGORY_LABELS] ?? c;
+                    return (
+                      <span
+                        key={c}
+                        className="flex items-center gap-1.5 border border-border bg-background py-1 pl-2 pr-1 text-[12px]"
+                      >
+                        <span
+                          className="size-2 shrink-0"
+                          style={{ backgroundColor: meta.color }}
+                        />
+                        {label}
+                        <button
+                          type="button"
+                          onClick={() => toggleCategory(c)}
+                          className="text-muted-foreground transition-colors hover:text-foreground"
+                          aria-label={`Quitar ${label}`}
+                        >
+                          <X className="size-3" />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
 
             <div className="space-y-2">
