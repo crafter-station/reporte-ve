@@ -56,14 +56,17 @@
   --secondary: oklch(0.24 0 0);
   --secondary-foreground: oklch(0.96 0 0);
   --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.62 0 0);
+  /* secondary text — raised to clear WCAG AA (≈7:1 on the card surface) so the
+     many small mono labels stay legible on phones in daylight. */
+  --muted-foreground: oklch(0.72 0 0);
   --accent: oklch(0.26 0 0);
   --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.62 0.2 25);
-  /* hairline borders ~#2a2a2a */
-  --border: oklch(0.28 0 0);
-  --input: oklch(0.3 0 0);
-  --ring: oklch(0.45 0 0);
+  /* hairline borders — a touch brighter so panels read on small/dim screens */
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.34 0 0);
+  /* focus ring — bright enough to be obvious for keyboard/AT users */
+  --ring: oklch(0.62 0 0);
   /* the rail/header is the darkest surface */
   --sidebar: oklch(0.12 0 0);
   --sidebar-foreground: oklch(0.96 0 0);
@@ -143,6 +146,28 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.22);
   background-clip: content-box;
+}
+
+/* Mobile-first ergonomics ──────────────────────────────────────────────────
+ * iOS auto-zooms when a focused control's font is < 16px. Keep all form
+ * controls at 16px on phones so focusing never yanks the viewport around. */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select,
+  [data-slot="select-trigger"] {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+/* Remove the tap-highlight flash and 300ms delay on interactive chrome. */
+button,
+a,
+[role="button"],
+[data-slot="select-trigger"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* A soft beacon pulse used by "live" indicators. */
