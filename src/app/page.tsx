@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Brand } from "@/components/brand";
+import { GithubBadge } from "@/components/github-badge";
 import { ReportMap } from "@/components/map/report-map";
 import { Button } from "@/components/ui/button";
 import { getPublicReports } from "@/db/queries";
@@ -16,6 +17,7 @@ export default async function Home() {
       <header className="z-20 flex h-14 items-center justify-between gap-2 border-b border-border bg-sidebar px-3 sm:px-4">
         <Brand href={null} />
         <div className="flex items-center gap-1.5">
+          <GithubBadge />
           <Button
             asChild
             size="sm"

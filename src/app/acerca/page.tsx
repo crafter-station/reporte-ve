@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { GithubBadge } from "@/components/github-badge";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 
@@ -34,6 +35,7 @@ export default function AcercaPage() {
       <SiteHeader
         right={
           <>
+            <GithubBadge className="hidden sm:inline-flex" />
             <Button asChild size="sm" variant="ghost">
               <Link href="/">Mapa</Link>
             </Button>
