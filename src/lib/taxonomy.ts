@@ -43,6 +43,25 @@ export const CATEGORY_META: Record<Category, { emoji: string; color: string }> =
     other: { emoji: "📍", color: "#6b7280" },
   };
 
+/** True when `value` is one of the canonical taxonomy categories. */
+export function isCategory(value: string): value is Category {
+  return (CATEGORIES as readonly string[]).includes(value);
+}
+
+/**
+ * Resolve meta for any category string. Reporters may submit free-text
+ * categories that don't exist yet (moderators recategorize later); those fall
+ * back to the neutral `other` accent until reclassified.
+ */
+export function categoryMeta(value: string): { emoji: string; color: string } {
+  return isCategory(value) ? CATEGORY_META[value] : CATEGORY_META.other;
+}
+
+/** Human label for any category string — known label or the raw custom text. */
+export function categoryLabel(value: string): string {
+  return isCategory(value) ? CATEGORY_LABELS[value] : value;
+}
+
 // ── Severity ──────────────────────────────────────────────────────────────
 export const SEVERITIES = ["low", "medium", "high", "critical"] as const;
 export type Severity = (typeof SEVERITIES)[number];
