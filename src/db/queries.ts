@@ -24,6 +24,7 @@ export async function getPublicReports(
     .select({
       id: reports.id,
       category: reports.category,
+      categories: reports.categories,
       severity: reports.severity,
       summary: reports.summary,
       estado: reports.estado,

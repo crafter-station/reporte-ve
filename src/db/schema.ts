@@ -37,7 +37,12 @@ export const reports = pgTable(
     mediaUrl: text("media_url"),
 
     // ── Structuring (filled by the crowd / moderators) ──
+    // Primary category — moderator-assigned; drives the map color & filters.
     category: text("category").$type<Category>(),
+    // All categories a reporter tagged (may be several at once, and may include
+    // free-text labels not yet in the taxonomy). Hints until a moderator sets
+    // the canonical `category`; never constrained to the enum at the DB layer.
+    categories: jsonb("categories").$type<string[]>().notNull().default([]),
     severity: text("severity").$type<Severity>(),
     status: text("status").$type<Status>().notNull().default("pending"),
     // Human-readable summary shown publicly (no PII).
@@ -110,6 +115,7 @@ export type NewAuditEntry = typeof auditLog.$inferInsert;
 export const PUBLIC_REPORT_COLUMNS = {
   id: reports.id,
   category: reports.category,
+  categories: reports.categories,
   severity: reports.severity,
   summary: reports.summary,
   estado: reports.estado,
@@ -125,6 +131,7 @@ export const PUBLIC_REPORT_COLUMNS = {
 export type PublicReport = {
   id: string;
   category: Category | null;
+  categories: string[];
   severity: Severity | null;
   summary: string | null;
   estado: string | null;

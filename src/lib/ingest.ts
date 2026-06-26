@@ -30,6 +30,8 @@ export type IngestInput = {
   reporterHash?: string | null;
   rawText?: string | null;
   mediaUrl?: string | null;
+  // Reporter-supplied category hints (may include free-text labels).
+  categories?: string[] | null;
   estado?: string | null;
   municipio?: string | null;
   parroquia?: string | null;
@@ -67,6 +69,7 @@ export async function ingestReport(input: IngestInput): Promise<IngestResult> {
     reporterHash: input.reporterHash ?? null,
     rawText: input.rawText ?? null,
     mediaUrl: input.mediaUrl ?? null,
+    categories: input.categories ?? [],
     estado: input.estado ?? null,
     municipio: input.municipio ?? null,
     parroquia: input.parroquia ?? null,
