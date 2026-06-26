@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -19,6 +19,13 @@ export const metadata: Metadata = {
     "Plataforma ciudadana, abierta y privada por diseño para mapear cortes de electricidad, agua, escasez de medicinas, alimentos y combustible en Venezuela. Inspirada en Mission 4636.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#0a0a0a",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,11 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col bg-background text-foreground">
         {children}
-        <Toaster richColors position="top-center" />
+        <Toaster theme="dark" position="bottom-right" />
       </body>
     </html>
   );

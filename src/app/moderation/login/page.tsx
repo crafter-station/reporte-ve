@@ -1,12 +1,6 @@
 import { redirect } from "next/navigation";
+import { MissionMark } from "@/components/mission-mark";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { checkPassword, createSession, getModerator } from "@/lib/auth";
 
 export const metadata = { title: "Acceso de voluntarios · Misión Venezuela" };
@@ -25,6 +19,9 @@ async function login(formData: FormData) {
   redirect(next.startsWith("/moderation") ? next : "/moderation");
 }
 
+const inputClass =
+  "h-9 w-full border border-input bg-background px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40";
+
 export default async function LoginPage({
   searchParams,
 }: {
@@ -35,28 +32,48 @@ export default async function LoginPage({
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Acceso de voluntarios</CardTitle>
-          <CardDescription>
-            Consola de moderación de Misión Venezuela. Solo personas
-            autorizadas.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={login} className="flex flex-col gap-3">
-            <input type="hidden" name="next" value={next ?? "/moderation"} />
-            <label className="text-sm font-medium" htmlFor="alias">
+      <div className="w-full max-w-[380px]">
+        <div className="mb-8 flex flex-col items-center gap-4 text-center">
+          <div className="flex size-11 items-center justify-center border border-border text-foreground">
+            <MissionMark className="size-6" />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-[20px] font-medium tracking-tight">
+              Acceso de voluntarios
+            </h1>
+            <p className="text-[13px] text-muted-foreground">
+              Consola de moderación. Solo personas autorizadas.
+            </p>
+          </div>
+        </div>
+
+        <form
+          action={login}
+          className="flex flex-col gap-4 border border-border bg-card p-6"
+        >
+          <input type="hidden" name="next" value={next ?? "/moderation"} />
+
+          <div className="space-y-1.5">
+            <label
+              className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+              htmlFor="alias"
+            >
               Alias
             </label>
             <input
               id="alias"
               name="alias"
               placeholder="p. ej. maria-caracas"
-              className="border-input bg-transparent rounded-md border px-3 py-2 text-sm"
+              className={inputClass}
               autoComplete="off"
             />
-            <label className="text-sm font-medium" htmlFor="password">
+          </div>
+
+          <div className="space-y-1.5">
+            <label
+              className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+              htmlFor="password"
+            >
               Contraseña
             </label>
             <input
@@ -64,17 +81,21 @@ export default async function LoginPage({
               name="password"
               type="password"
               required
-              className="border-input bg-transparent rounded-md border px-3 py-2 text-sm"
+              className={inputClass}
             />
-            {error ? (
-              <p className="text-destructive text-sm">Contraseña incorrecta.</p>
-            ) : null}
-            <Button type="submit" className="mt-2">
-              Entrar
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+
+          {error ? (
+            <p className="border border-destructive/40 bg-destructive/10 px-3 py-2 text-[13px] text-destructive">
+              Contraseña incorrecta.
+            </p>
+          ) : null}
+
+          <Button type="submit" className="mt-1">
+            Entrar
+          </Button>
+        </form>
+      </div>
     </main>
   );
 }

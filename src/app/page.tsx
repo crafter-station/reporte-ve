@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Brand } from "@/components/brand";
 import { ReportMap } from "@/components/map/report-map";
 import { Button } from "@/components/ui/button";
 import { getPublicReports } from "@/db/queries";
@@ -11,20 +12,15 @@ export default async function Home() {
   const initialReports = await getPublicReports({ sinceHours: 24 * 14 });
 
   return (
-    <main className="relative flex h-screen flex-col">
-      <header className="z-20 flex items-center justify-between border-b bg-background px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🇻🇪</span>
-          <div className="leading-tight">
-            <h1 className="text-sm font-semibold">Misión Venezuela</h1>
-            <p className="text-muted-foreground text-xs">
-              Mapa ciudadano de servicios y escasez
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
+    <main className="relative flex h-screen flex-col overflow-hidden">
+      <header className="z-20 flex h-14 items-center justify-between border-b border-border bg-sidebar px-4">
+        <Brand href={null} />
+        <div className="flex items-center gap-1.5">
           <Button asChild size="sm" variant="ghost">
             <Link href="/acerca">Acerca</Link>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <Link href="/moderation">Consola</Link>
           </Button>
           <Button asChild size="sm">
             <Link href="/reportar">Reportar</Link>
