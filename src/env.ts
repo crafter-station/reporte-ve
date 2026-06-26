@@ -41,8 +41,13 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY: z
       .string()
       .min(1, "Supabase anon key is required"),
-    // Optional MapLibre style URL (defaults to a free demo style in code).
-    NEXT_PUBLIC_MAP_STYLE_URL: z.string().url().optional(),
+    // Mapbox public access token (pk.…) — account.mapbox.com → Tokens.
+    NEXT_PUBLIC_MAPBOX_TOKEN: z
+      .string()
+      .min(1, "NEXT_PUBLIC_MAPBOX_TOKEN is required"),
+    // Mapbox style URL. Defaults to mapbox://styles/mapbox/light-v11 in code.
+    // Swap to dark-v11 or satellite-streets-v12 without touching code.
+    NEXT_PUBLIC_MAP_STYLE_URL: z.string().min(1).optional(),
     NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
   },
 
@@ -60,6 +65,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY,
+    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
     NEXT_PUBLIC_MAP_STYLE_URL: process.env.NEXT_PUBLIC_MAP_STYLE_URL,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   },

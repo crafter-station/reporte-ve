@@ -49,7 +49,7 @@ is unacceptable, so this project is **private by default**:
 - **Drizzle ORM** + **Zod** (typesafe schema ↔ validation, single source of truth)
 - **Kapso** — WhatsApp Cloud API ([`@kapso/whatsapp-cloud-api`](https://www.npmjs.com/package/@kapso/whatsapp-cloud-api))
 - **shadcn/ui** (new-york) + Tailwind v4
-- **MapLibre GL** — open, key-free maps
+- **Mapbox GL JS v3** — maps (needs `NEXT_PUBLIC_MAPBOX_TOKEN`)
 - **Biome** + **bun**
 
 ## Getting started
