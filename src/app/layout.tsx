@@ -13,10 +13,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ve.crafter.run";
+const DESCRIPTION =
+  "Plataforma ciudadana, abierta y privada por diseño para mapear cortes de electricidad, agua, escasez de medicinas, alimentos y combustible en Venezuela. Inspirada en Mission 4636.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Misión Venezuela · Mapa ciudadano de servicios",
-  description:
-    "Plataforma ciudadana, abierta y privada por diseño para mapear cortes de electricidad, agua, escasez de medicinas, alimentos y combustible en Venezuela. Inspirada en Mission 4636.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Misión Venezuela",
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Misión Venezuela",
+    locale: "es_VE",
+    type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Misión Venezuela",
+    description: DESCRIPTION,
+    images: ["/og-twitter.png"],
+  },
 };
 
 export const viewport: Viewport = {
