@@ -37,6 +37,13 @@ export const env = createEnv({
       .min(1, "MODERATOR_SESSION_SECRET is required"),
     // Number of independent moderator confirmations required before publishing.
     PUBLISH_THRESHOLD: z.coerce.number().int().min(1).max(5).default(1),
+    // When "true", incoming reports skip the moderation queue and are published
+    // automatically (PII is still scrubbed and coordinates still coarsened).
+    // Intended for demos/low-risk use — keep OFF for the real privacy posture.
+    AUTO_PUBLISH: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((v) => v === "true"),
   },
 
   client: {
@@ -68,6 +75,7 @@ export const env = createEnv({
     MODERATOR_PASSWORD: process.env.MODERATOR_PASSWORD,
     MODERATOR_SESSION_SECRET: process.env.MODERATOR_SESSION_SECRET,
     PUBLISH_THRESHOLD: process.env.PUBLISH_THRESHOLD,
+    AUTO_PUBLISH: process.env.AUTO_PUBLISH,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY,
