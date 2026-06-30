@@ -64,12 +64,5 @@ export const publicQuerySchema = z.object({
   category: categorySchema.optional(),
   severity: severitySchema.optional(),
   estado: estadoSchema.optional(),
-  // Lookback window in hours (default 14 days).
-  sinceHours: z.coerce
-    .number()
-    .int()
-    .min(1)
-    .max(24 * 90)
-    .default(24 * 14),
 });
 export type PublicQueryInput = z.infer<typeof publicQuerySchema>;
