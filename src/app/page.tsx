@@ -11,8 +11,8 @@ import { getPublicReports } from "@/db/queries";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  // Last 14 days of published, PII-free reports.
-  const initialReports = await getPublicReports({ sinceHours: 24 * 14 });
+  // All published, PII-free reports (no time window).
+  const initialReports = await getPublicReports({});
 
   return (
     <main className="relative flex h-screen flex-col overflow-hidden">
